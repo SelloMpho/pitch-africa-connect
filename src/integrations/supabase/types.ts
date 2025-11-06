@@ -20,30 +20,63 @@ export type Database = {
           bio: string | null
           company_name: string | null
           created_at: string | null
+          founding_year: number | null
           full_name: string
+          funding_amount_needed: number | null
+          funding_stage: string | null
           id: string
+          industry: string | null
+          investment_focus: string[] | null
           location: string | null
+          pitch_summary: string | null
+          portfolio_count: number | null
+          preferred_stages: string[] | null
+          ticket_size_max: number | null
+          ticket_size_min: number | null
           updated_at: string | null
+          website: string | null
         }
         Insert: {
           avatar_url?: string | null
           bio?: string | null
           company_name?: string | null
           created_at?: string | null
+          founding_year?: number | null
           full_name: string
+          funding_amount_needed?: number | null
+          funding_stage?: string | null
           id: string
+          industry?: string | null
+          investment_focus?: string[] | null
           location?: string | null
+          pitch_summary?: string | null
+          portfolio_count?: number | null
+          preferred_stages?: string[] | null
+          ticket_size_max?: number | null
+          ticket_size_min?: number | null
           updated_at?: string | null
+          website?: string | null
         }
         Update: {
           avatar_url?: string | null
           bio?: string | null
           company_name?: string | null
           created_at?: string | null
+          founding_year?: number | null
           full_name?: string
+          funding_amount_needed?: number | null
+          funding_stage?: string | null
           id?: string
+          industry?: string | null
+          investment_focus?: string[] | null
           location?: string | null
+          pitch_summary?: string | null
+          portfolio_count?: number | null
+          preferred_stages?: string[] | null
+          ticket_size_max?: number | null
+          ticket_size_min?: number | null
           updated_at?: string | null
+          website?: string | null
         }
         Relationships: []
       }

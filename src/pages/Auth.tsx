@@ -152,10 +152,8 @@ const Auth = () => {
           <div className="grid md:grid-cols-2 gap-6 mb-6">
             {/* Entrepreneur Card */}
             <Card
-              className={`cursor-pointer transition-all duration-300 hover:shadow-[var(--shadow-medium)] ${
-                selectedRole === "entrepreneur" ? "ring-2 ring-primary shadow-[var(--shadow-strong)]" : ""
-              }`}
-              onClick={() => setSelectedRole("entrepreneur")}
+              className={`cursor-pointer transition-all duration-300 hover:shadow-[var(--shadow-medium)]`}
+              onClick={() => navigate("/auth/register/entrepreneur")}
             >
               <CardHeader>
                 <div className="w-12 h-12 rounded-lg bg-[image:var(--gradient-primary)] flex items-center justify-center mb-4">
@@ -178,10 +176,8 @@ const Auth = () => {
 
             {/* Investor Card */}
             <Card
-              className={`cursor-pointer transition-all duration-300 hover:shadow-[var(--shadow-medium)] ${
-                selectedRole === "investor" ? "ring-2 ring-primary shadow-[var(--shadow-strong)]" : ""
-              }`}
-              onClick={() => setSelectedRole("investor")}
+              className={`cursor-pointer transition-all duration-300 hover:shadow-[var(--shadow-medium)]`}
+              onClick={() => navigate("/auth/register/investor")}
             >
               <CardHeader>
                 <div className="w-12 h-12 rounded-lg bg-[image:var(--gradient-success)] flex items-center justify-center mb-4">
