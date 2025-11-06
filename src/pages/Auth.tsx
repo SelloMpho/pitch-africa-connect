@@ -29,7 +29,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleAuth = async (role: UserRole) => {
+  const handleAuth = async (role?: UserRole) => {
     setLoading(true);
     try {
       // Validate inputs
@@ -50,34 +50,13 @@ const Auth = () => {
       }
 
       if (isLogin) {
-        // Login
+        // Login - no role check needed
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
 
         if (error) throw error;
-
-        if (data.user) {
-          // Check if user has the selected role
-          const { data: roleData } = await supabase
-            .from("user_roles")
-            .select("role")
-            .eq("user_id", data.user.id)
-            .eq("role", role)
-            .single();
-
-          if (!roleData) {
-            await supabase.auth.signOut();
-            toast({
-              variant: "destructive",
-              title: "Access Denied",
-              description: `This account is not registered as ${role === "entrepreneur" ? "an Entrepreneur" : "an Investor"}.`,
-            });
-            setLoading(false);
-            return;
-          }
-        }
 
         toast({
           title: "Welcome back!",
@@ -91,6 +70,16 @@ const Auth = () => {
             variant: "destructive",
             title: "Validation Error",
             description: "Full name is required",
+          });
+          setLoading(false);
+          return;
+        }
+
+        if (!role) {
+          toast({
+            variant: "destructive",
+            title: "Validation Error",
+            description: "Please select a role",
           });
           setLoading(false);
           return;
@@ -159,66 +148,68 @@ const Auth = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 mb-6">
-          {/* Entrepreneur Card */}
-          <Card
-            className={`cursor-pointer transition-all duration-300 hover:shadow-[var(--shadow-medium)] ${
-              selectedRole === "entrepreneur" ? "ring-2 ring-primary shadow-[var(--shadow-strong)]" : ""
-            }`}
-            onClick={() => setSelectedRole("entrepreneur")}
-          >
-            <CardHeader>
-              <div className="w-12 h-12 rounded-lg bg-[image:var(--gradient-primary)] flex items-center justify-center mb-4">
-                <Briefcase className="w-6 h-6 text-primary-foreground" />
-              </div>
-              <CardTitle className="text-2xl">Entrepreneur</CardTitle>
-              <CardDescription>
-                Showcase your startup and connect with investors
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>✓ Create your business profile</li>
-                <li>✓ Upload pitch decks and videos</li>
-                <li>✓ Connect with potential investors</li>
-                <li>✓ Track pitch performance</li>
-              </ul>
-            </CardContent>
-          </Card>
+        {!isLogin && (
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            {/* Entrepreneur Card */}
+            <Card
+              className={`cursor-pointer transition-all duration-300 hover:shadow-[var(--shadow-medium)] ${
+                selectedRole === "entrepreneur" ? "ring-2 ring-primary shadow-[var(--shadow-strong)]" : ""
+              }`}
+              onClick={() => setSelectedRole("entrepreneur")}
+            >
+              <CardHeader>
+                <div className="w-12 h-12 rounded-lg bg-[image:var(--gradient-primary)] flex items-center justify-center mb-4">
+                  <Briefcase className="w-6 h-6 text-primary-foreground" />
+                </div>
+                <CardTitle className="text-2xl">Entrepreneur</CardTitle>
+                <CardDescription>
+                  Showcase your startup and connect with investors
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li>✓ Create your business profile</li>
+                  <li>✓ Upload pitch decks and videos</li>
+                  <li>✓ Connect with potential investors</li>
+                  <li>✓ Track pitch performance</li>
+                </ul>
+              </CardContent>
+            </Card>
 
-          {/* Investor Card */}
-          <Card
-            className={`cursor-pointer transition-all duration-300 hover:shadow-[var(--shadow-medium)] ${
-              selectedRole === "investor" ? "ring-2 ring-primary shadow-[var(--shadow-strong)]" : ""
-            }`}
-            onClick={() => setSelectedRole("investor")}
-          >
-            <CardHeader>
-              <div className="w-12 h-12 rounded-lg bg-[image:var(--gradient-success)] flex items-center justify-center mb-4">
-                <TrendingUp className="w-6 h-6 text-secondary-foreground" />
-              </div>
-              <CardTitle className="text-2xl">Investor</CardTitle>
-              <CardDescription>
-                Discover and invest in promising South African startups
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>✓ Browse verified startups</li>
-                <li>✓ Filter by industry and stage</li>
-                <li>✓ Direct messaging with founders</li>
-                <li>✓ Track investment opportunities</li>
-              </ul>
-            </CardContent>
-          </Card>
-        </div>
+            {/* Investor Card */}
+            <Card
+              className={`cursor-pointer transition-all duration-300 hover:shadow-[var(--shadow-medium)] ${
+                selectedRole === "investor" ? "ring-2 ring-primary shadow-[var(--shadow-strong)]" : ""
+              }`}
+              onClick={() => setSelectedRole("investor")}
+            >
+              <CardHeader>
+                <div className="w-12 h-12 rounded-lg bg-[image:var(--gradient-success)] flex items-center justify-center mb-4">
+                  <TrendingUp className="w-6 h-6 text-secondary-foreground" />
+                </div>
+                <CardTitle className="text-2xl">Investor</CardTitle>
+                <CardDescription>
+                  Discover and invest in promising South African startups
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li>✓ Browse verified startups</li>
+                  <li>✓ Filter by industry and stage</li>
+                  <li>✓ Direct messaging with founders</li>
+                  <li>✓ Track investment opportunities</li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Auth Form */}
-        {selectedRole && (
+        {(isLogin || selectedRole) && (
           <Card className="max-w-md mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
             <CardHeader>
               <CardTitle>
-                {isLogin ? "Sign In" : "Create Account"} as {selectedRole === "entrepreneur" ? "an Entrepreneur" : "an Investor"}
+                {isLogin ? "Sign In" : `Create Account as ${selectedRole === "entrepreneur" ? "an Entrepreneur" : "an Investor"}`}
               </CardTitle>
               <CardDescription>
                 {isLogin
@@ -269,7 +260,7 @@ const Auth = () => {
                 variant="hero"
                 size="lg"
                 className="w-full"
-                onClick={() => handleAuth(selectedRole)}
+                onClick={() => handleAuth(isLogin ? undefined : selectedRole)}
                 disabled={loading}
               >
                 {loading ? "Please wait..." : isLogin ? "Sign In" : "Create Account"}
