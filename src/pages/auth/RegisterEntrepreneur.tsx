@@ -110,7 +110,7 @@ const RegisterEntrepreneur = () => {
           title: "Account created!",
           description: "Welcome to PitchPoint.",
         });
-        navigate("/");
+        navigate("/dashboard/entrepreneur");
       }
     } catch (error: any) {
       toast({

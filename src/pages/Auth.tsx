@@ -62,7 +62,28 @@ const Auth = () => {
           title: "Welcome back!",
           description: "Successfully logged in.",
         });
-        navigate("/");
+
+        // Redirect based on role
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data: roleData } = await supabase
+            .from("user_roles")
+            .select("role")
+            .eq("user_id", user.id)
+            .single();
+
+          if (roleData?.role === "admin") {
+            navigate("/dashboard/admin");
+          } else if (roleData?.role === "entrepreneur") {
+            navigate("/dashboard/entrepreneur");
+          } else if (roleData?.role === "investor") {
+            navigate("/dashboard/investor");
+          } else {
+            navigate("/");
+          }
+        } else {
+          navigate("/");
+        }
       } else {
         // Signup
         if (!fullName) {
