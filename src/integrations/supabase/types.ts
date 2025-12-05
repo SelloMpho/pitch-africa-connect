@@ -50,6 +50,48 @@ export type Database = {
         }
         Relationships: []
       }
+      messages: {
+        Row: {
+          archived: boolean
+          content: string
+          created_at: string
+          id: string
+          read: boolean
+          recipient_id: string | null
+          sender_id: string
+          sender_name: string
+          starred: boolean
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          archived?: boolean
+          content: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          recipient_id?: string | null
+          sender_id: string
+          sender_name: string
+          starred?: boolean
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          archived?: boolean
+          content?: string
+          created_at?: string
+          id?: string
+          read?: boolean
+          recipient_id?: string | null
+          sender_id?: string
+          sender_name?: string
+          starred?: boolean
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
